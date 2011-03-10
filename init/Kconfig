@@ -28,6 +28,12 @@ config IRQ_WORK
 	bool
 	depends on HAVE_IRQ_WORK
 
+ config GINGERBREAD
+ bool "Froyo Compatibility"
+ select BCM4329_ENABLE_CSCAN
+ default n
+
+
 menu "General setup"
 
 config EXPERIMENTAL
