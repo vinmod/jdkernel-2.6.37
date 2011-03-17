@@ -1523,7 +1523,9 @@ void mmc_rescan(struct work_struct *work)
 	int err;
 	unsigned long flags;
 	int i;
+#ifndef CONFIG_MMC_USE_ONLY_HOST_DEFINED_FREQUENCY
 	const unsigned freqs[] = { 400000, 300000, 200000, 100000 };
+#endif
 	int extend_wakelock = 0;
 
 	spin_lock_irqsave(&host->lock, flags);
@@ -1539,14 +1541,15 @@ void mmc_rescan(struct work_struct *work)
 	mmc_bus_get(host);
 
 	/* if there is a card registered, check whether it is still present */
-	if ((host->bus_ops != NULL) && host->bus_ops->detect && !host->bus_dead)
+	if ((host->bus_ops != NULL) && host->bus_ops->detect &&
+		!host->bus_dead) {
 		host->bus_ops->detect(host);
-
-	/* If the card was removed the bus will be marked
-	 * as dead - extend the wakelock so userspace
-	 * can respond */
-	if (host->bus_dead)
-		extend_wakelock = 1;
+		/* If the card was removed the bus will be marked
+		 * as dead - extend the wakelock so userspace
+		 * can respond */
+		if (host->bus_dead)
+			extend_wakelock = 1;
+	}
 
 	mmc_bus_put(host);
 
@@ -1570,6 +1573,7 @@ void mmc_rescan(struct work_struct *work)
 	if (host->ops->get_cd && host->ops->get_cd(host) == 0)
 		goto out;
 
+#ifndef CONFIG_MMC_USE_ONLY_HOST_DEFINED_FREQUENCY
 	for (i = 0; i < ARRAY_SIZE(freqs); i++) {
 		mmc_claim_host(host);
 
@@ -1581,6 +1585,16 @@ void mmc_rescan(struct work_struct *work)
 			mmc_release_host(host);
 			goto out;
 		}
+#else
+		mmc_claim_host(host);
+        if (host->f_min > 400000) {
+            pr_warning("%s: Minimum clock frequency too high for "
+                    "identification mode\n", mmc_hostname(host));
+            host->f_init = 400000;
+        } else
+            host->f_init = host->f_min;
+#endif
+
 #ifdef CONFIG_MMC_DEBUG
 		pr_info("%s: %s: trying to init card at %u Hz\n",
 			mmc_hostname(host), __func__, host->f_init);
@@ -1637,7 +1651,9 @@ void mmc_rescan(struct work_struct *work)
 out_fail:
 		mmc_release_host(host);
 		mmc_power_off(host);
+#ifndef CONFIG_MMC_USE_ONLY_HOST_DEFINED_FREQUENCY
 	}
+#endif
 out:
 	if (extend_wakelock)
 		wake_lock_timeout(&mmc_delayed_work_wake_lock, HZ / 2);

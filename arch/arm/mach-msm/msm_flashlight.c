@@ -177,7 +177,7 @@ int flashlight_control(int mode)
 		flashlight_hw_command(2, 4);
 		this_fl_str->mode_status = FL_MODE_TORCH_LEVEL_2;
 		this_fl_str->fl_lcdev.brightness = LED_HALF - 1;
-	/*break: 
+	break;
         case FL_MODE_DEATH_RAY:
 		pr_info("%s: death ray\n", __func__);
 		hrtimer_cancel(&this_fl_str->timer);
@@ -186,7 +186,7 @@ int flashlight_control(int mode)
 		gpio_direction_output(this_fl_str->gpio_flash, 1);
 		this_fl_str->mode_status = 0;
 		this_fl_str->fl_lcdev.brightness = 3;
-		wake_lock(&this_fl_str->wake_lock);*/
+		wake_lock(&this_fl_str->wake_lock);
 	break;
 	default:
 		printk(KERN_ERR "%s: unknown flash_light flags: %d\n",

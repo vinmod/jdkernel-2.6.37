@@ -25,7 +25,6 @@
 #include "board-incrediblec.h"
 #include "proc_comm.h"
 #include "pmic.h"
-#include "board-incrediblec-tpa2018d1.h"
 
 #if 1
 #define D(fmt, args...) printk(KERN_INFO "Audio: "fmt, ##args)
@@ -39,8 +38,8 @@ static int headset_status = 0;
 
 static struct q6_hw_info q6_audio_hw[Q6_HW_COUNT] = {
 	[Q6_HW_HANDSET] = {
-		.min_gain = -2000,
-		.max_gain = 0,
+		.min_gain = -1600,
+		.max_gain = 400,
 	},
 	[Q6_HW_HEADSET] = {
 		.min_gain = -2000,
@@ -48,7 +47,7 @@ static struct q6_hw_info q6_audio_hw[Q6_HW_COUNT] = {
 	},
 	[Q6_HW_SPEAKER] = {
 		.min_gain = -1500,
-		.max_gain = 0,
+		.max_gain = 400,
 	},
 	[Q6_HW_TTY] = {
 		.min_gain = -2000,
@@ -105,7 +104,6 @@ void incrediblec_speaker_enable(int en)
 
 		pmic_set_spkr_configuration(&scm);
 	}
-	tpa2018d1_set_speaker_amp(en);
 }
 
 void incrediblec_receiver_enable(int en)

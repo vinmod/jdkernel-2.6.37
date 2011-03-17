@@ -448,7 +448,7 @@ pte_t *kgsl_get_pte_from_vaddr(unsigned int vaddr)
 		return 0;
 	}
 
-	/*pte_ptr = pte_offset_map(pmd_ptr, vaddr);*/
+	pte_ptr = pte_offset_map(pmd_ptr, vaddr);
 	if (!pte_ptr) {
 		KGSL_MEM_ERR
 		    ("Unable to map pte entry while trying to convert virtual "
