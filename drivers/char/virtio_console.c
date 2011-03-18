@@ -387,7 +387,12 @@ static void discard_port_data(struct port *port)
 	unsigned int len;
 	int ret;
 
-	vq = port->in_vq;
+	 if (!port->portdev) {
+/* Device has been unplugged.  vqs are already gone. */
+  return;
+ }
+
+       vq = port->in_vq;
 	if (port->inbuf)
 		buf = port->inbuf;
 	else
@@ -468,7 +473,11 @@ static void reclaim_consumed_buffers(struct port *port)
 {
 	void *buf;
 	unsigned int len;
-
+	
+ if (!port->portdev) {
+/* Device has been unplugged.  vqs are already gone. */
+  return;
+ }
 	while ((buf = virtqueue_get_buf(port->out_vq, &len))) {
 		kfree(buf);
 		port->outvq_full = false;

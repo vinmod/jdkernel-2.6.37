@@ -94,7 +94,7 @@ struct clkctl_acpu_speed acpu_freq_tbl[] = {
         { 883200, CCTL(CLK_TCXO, 1),            SRC_SCPLL, 0x17, 0, 1240, 128000 },
         { 921600, CCTL(CLK_TCXO, 1),            SRC_SCPLL, 0x18, 0, 1265, 128000 },
         { 960000, CCTL(CLK_TCXO, 1),            SRC_SCPLL, 0x19, 0, 1265, 128000 },
-        { 998400, CCTL(CLK_TCXO, 1),            SRC_SCPLL, 0x1A, 0, 1265, 128000 },
+        { 1000000, CCTL(CLK_TCXO, 1),            SRC_SCPLL, 0x1A, 0, 1265, 128000 },
 	{ 1036800, CCTL(CLK_TCXO, 1),		SRC_SCPLL, 0x1B, 0, 1290, 128000 },
 	{ 1075200, CCTL(CLK_TCXO, 1),		SRC_SCPLL, 0x1C, 0, 1290, 128000 },
 	{ 1113600, CCTL(CLK_TCXO, 1),		SRC_SCPLL, 0x1D, 0, 1290, 128000 },
